@@ -1,8 +1,6 @@
 <?php
 require_once("settings.php");
-header('Content-type: application/json');
-
-if (empty($_SERVER['HTTP_API_KEY']) && !in_array($_SERVER['HTTP_API_KEY'], Settings::API_KEYS)) {
+if (empty($_SERVER['HTTP_API_KEY']) || !in_array($_SERVER['HTTP_API_KEY'], Settings::API_KEYS)) {
     echo json_encode(
         array(
             "success" => false,
@@ -27,6 +25,7 @@ if (!empty($_FILES['file']) && exif_imagetype($_FILES['file']['tmp_name'])) {
         </html>
     ');
     fclose($file);
+    header('Content-type: application/json');
     die(json_encode(array("success" => true, "url" => "https://tvw.me/" . $random_name)));
 }
 //Upload file
@@ -45,6 +44,7 @@ if (!empty($_FILES['file']) && !exif_imagetype($_FILES['file']['tmp_name'])) {
         ?>
     ");
     fclose($file);
+    header('Content-type: application/json');
     die(json_encode(array("success" => true, "url" => "https://tvw.me/" . $random_name)));
 }
 //Upload url
@@ -58,6 +58,7 @@ if (!empty($_POST['input']) && filter_var($_POST['input'], FILTER_VALIDATE_URL))
         ?>
     ");
     fclose($file);
+    header('Content-type: application/json');
     die(json_encode(array("success" => true, "url" => "https://tvw.me/" . $random_name)));
 }
 //Upload text
@@ -81,5 +82,15 @@ if (!empty($_POST['input']) && filter_var($_POST['input'], FILTER_VALIDATE_URL) 
             </body>
         </html>');
     fclose($file);
+    header('Content-type: application/json');
     die(json_encode(array("success" => true, "url" => "https://tvw.me/" . $random_name)));
 }
+?>
+<html>
+<head>
+    <title>Test</title>
+</head>
+<body>
+Test
+</body>
+</html>
