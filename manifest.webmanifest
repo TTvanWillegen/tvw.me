@@ -1,0 +1,31 @@
+{
+  "short_name": "tvw.me",
+  "name": "tvw.me: shorten, upload, share",
+  "description": "Upload and shorten urls, upload text or upload files and share them easily with one link",
+  "icons": [
+        {
+            "src": "/android-chrome-192x192.png?v=m2R3gB69wO",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-512x512.png?v=m2R3gB69wO",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+  ],
+  "start_url": "/uploader.php?source=pwa",
+  "theme_color": "#003e07",
+  "background_color": "#003e07",
+  "display": "standalone",
+  "scope": "/uploader.php",
+
+  "shortcuts": [
+    {
+      "name": "Upload text",
+      "short_name": "Text",
+      "description": "Upload some text to tvw.me to share with link",
+      "url": "/uploader.php?source=pwa"
+    }
+  ]
+}

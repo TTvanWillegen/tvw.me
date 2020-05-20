@@ -1,12 +1,13 @@
 <?php
 require_once("settings.php");
-if (empty($_SERVER['HTTP_API_KEY']) || !in_array($_SERVER['HTTP_API_KEY'], Settings::API_KEYS)) {
-    echo json_encode(
+if (!empty($POST) && (empty($_SERVER['HTTP_API_KEY']) || !in_array($_SERVER['HTTP_API_KEY'], Settings::API_KEYS))) {
+    header('Content-type: application/json');
+    die(json_encode(
         array(
             "success" => false,
             "error" => "forbidden"
         )
-    );
+    ));
 }
 
 $random_name = substr(md5(uniqid(mt_rand(), true)), 0, 5);
@@ -35,7 +36,7 @@ if (!empty($_FILES['file']) && !exif_imagetype($_FILES['file']['tmp_name'])) {
     move_uploaded_file($_FILES['file']['tmp_name'], $random_name . "/" . $random_name);
     $file = fopen($random_name . "/index.php", "w");
     $name = $_FILES['file']['name'];
-    fwrite($file,"
+    fwrite($file, "
         <?php
             header('Content-Type: application/octet-stream'); 
             header('Content-Transfer-Encoding: Binary'); 
@@ -89,8 +90,36 @@ if (!empty($_POST['input']) && filter_var($_POST['input'], FILTER_VALIDATE_URL) 
 <html>
 <head>
     <title>Test</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="msapplication-TileColor" content="#003e07">
+    <meta name="theme-color" content="#003e07">
+
+    <script>
+        window.addEventListener('load', () => {
+            if (navigator.standalone) {
+                console.log('Launched: Installed (iOS)');
+            } else if (matchMedia('(display-mode: standalone)').matches) {
+                console.log('Launched: Installed');
+            } else {
+                console.log('Launched: Browser Tab');
+            }
+        });
+    </script>
 </head>
 <body>
 Test
+<button onclick="copy(location.href)">Copy url</button>
+<script>
+    async function copy(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+        } catch (err) {
+        }
+    }
+</script>
 </body>
 </html>
