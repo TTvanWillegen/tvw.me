@@ -98,7 +98,7 @@ if (!empty($_POST['input']) && filter_var($_POST['input'], FILTER_VALIDATE_URL) 
     <meta name="msapplication-TileColor" content="#003e07">
     <meta name="theme-color" content="#003e07">
 
-    <script>
+    <script type="application/javascript">
         window.addEventListener('load', () => {
             if (navigator.standalone) {
                 console.log('Launched: Installed (iOS)');
@@ -113,13 +113,19 @@ if (!empty($_POST['input']) && filter_var($_POST['input'], FILTER_VALIDATE_URL) 
 <body>
 Test
 <button onclick="copy(location.href)">Copy url</button>
-<script>
+<script type="application/javascript">
     async function copy(text) {
         try {
             await navigator.clipboard.writeText(text);
         } catch (err) {
         }
     }
+</script>
+<script type="module">
+    import 'https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate';
+
+    const el = document.createElement('pwa-update');
+    document.body.appendChild(el);
 </script>
 </body>
 </html>
