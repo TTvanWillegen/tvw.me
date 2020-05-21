@@ -14,18 +14,33 @@
             "type": "image/png"
         }
   ],
-  "start_url": "/uploader.php?source=pwa",
+  "start_url": "/upload/?source=pwa",
   "theme_color": "#003e07",
   "background_color": "#003e07",
   "display": "standalone",
-  "scope": "/uploader.php",
+  "scope": "/upload/",
 
   "shortcuts": [
     {
       "name": "Upload text",
       "short_name": "Text",
       "description": "Upload some text to tvw.me to share with link",
-      "url": "/uploader.php?source=pwa"
+      "url": "/upload/?source=pwa"
     }
-  ]
+  ],
+  "share_target": {
+      "action": "/upload/",
+      "method": "POST",
+      "enctype": "multipart/form-data",
+      "params": {
+        "text": "input",
+        "url": "link",
+        "files": [
+          {
+            "name": "file",
+            "accept": ["image/*"]
+          }
+        ]
+      }
+    }
 }
