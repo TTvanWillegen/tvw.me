@@ -73,7 +73,7 @@ class Uploader
 
         if (Uploader::isUrl($text)) {
             $prefix = "u";
-            $php = '<?php header("Location: %1$s"); ?>';
+            $php = '<?php header("Location: %1$s");';
         } else {
             $prefix = "t";
             $php = '
@@ -90,10 +90,9 @@ class Uploader
                 </html>';
             $text = htmlentities($text);
         }
-
         $randomName = $prefix . $randomName;
         mkdir(self::BASE_FOLDER.$randomName);
-        $file = fopen(self::BASE_FOLDER.$randomName . "/index.html", "w");
+        $file = fopen(self::BASE_FOLDER.$randomName . "/index.php", "w");
         fwrite($file, sprintf($php, $text));
         fclose($file);
         return "https://tvw.me/" . $randomName;
