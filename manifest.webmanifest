@@ -14,7 +14,7 @@
             "type": "image/png"
         }
   ],
-  "start_url": "/upload/?source=pwa",
+  "start_url": "/upload/?pwa=true",
   "theme_color": "#003e07",
   "background_color": "#003e07",
   "display": "standalone",
@@ -25,11 +25,11 @@
       "name": "Upload text",
       "short_name": "Text",
       "description": "Upload some text to tvw.me to share with link",
-      "url": "/upload/?source=pwa"
+      "url": "/upload/?pwa=true"
     }
   ],
   "share_target": {
-      "action": "/upload/",
+      "action": "/upload/?pwa=true",
       "method": "POST",
       "enctype": "multipart/form-data",
       "params": {
@@ -39,7 +39,15 @@
           {
             "name": "file",
             "accept": ["image/*"]
-          }
+          },
+                     {
+                       "name": "file",
+                       "accept": ["*/*"]
+                     },
+                                {
+                                  "name": "file",
+                                  "accept": [".*"]
+                                }
         ]
       }
     }

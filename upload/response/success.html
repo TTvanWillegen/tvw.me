@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tvw.me | upload, shorten, share</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#003e07">
+    <meta name="theme-color" content="#003e07">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="application/javascript">
+        function share(url, password=null){
+            let shareText = url
+            if(password != null){
+                shareText += "; Password = " + password;
+            }
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'tvw.me',
+                    text: shareText,
+                })
+                    .then(() => console.log('Successful share'))
+                    .catch((error) => console.log('Error sharing', error));
+            }
+        }
+    </script>
+</head>
+<body>
+<H1>
+    Success!
+</H1>
+<p>
+    Your item was successfully uploaded to tvw.me.<br/>
+    You can access your item here:<br/>
+    <a href='%1$s'>%1$s</a><br/>
+</p>
+<button style="width:90vw; height: 50vh; margin: 0 5vw;" onclick="share('%1$s')">Share</button>
+<button style="width:90vw; height: 10vh; margin: 0 5vw;" onclick="location.href = 'https://tvw.me/upload/?pwa=true'">Upload another</button>
+</body>
+</html>

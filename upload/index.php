@@ -1,18 +1,31 @@
 <?php
 require_once("uploader.php");
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    header('Content-type: application/json');
 
-    if (!Uploader::validateAccess($_SERVER['HTTP_API_KEY'])) {
-        die(json_encode(
-            array(
-                "success" => false,
-                "error" => "forbidden",
-                "key_used" => $_SERVER['HTTP_API_KEY']
-            )
-        ));
+    $queries = array();
+    parse_str($_SERVER['QUERY_STRING'], $queries);
+
+    $viaPWA = $queries["pwa"] == 'true';
+    if (!$viaPWA) {
+        header('Content-type: application/json');
+    }else{
+        header('x-test: true');
     }
+
     $tvwUrl = false;
+    if (!Uploader::validateAccess($_SERVER['HTTP_API_KEY'])) {
+        if ($viaPWA) {
+            die(sprintf(file_get_contents("./response/forbidden.html"), $_SERVER['HTTP_API_KEY']));
+        } else {
+            die(json_encode(
+                array(
+                    "success" => false,
+                    "error" => "forbidden",
+                    "key_used" => $_SERVER['HTTP_API_KEY']
+                )
+            ));
+        }
+    }
     if (!empty($_FILES['file'])) {
         $tvwUrl = Uploader::uploadFile($_FILES['file'], $_FILES['file']['tmp_name']);
     }
@@ -20,22 +33,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tvwUrl = Uploader::uploadText($_POST['input']);
     }
 
-    if ($tvwUrl) {
-        die(json_encode(array("success" => true, "url" => $tvwUrl)));
+
+    if ($viaPWA) {
+        die(sprintf(file_get_contents("./response/success.html"), $tvwUrl));
     } else {
-        die(json_encode(array("success" => false, "error" => "Something went wrong.")));
+        if ($tvwUrl) {
+            die(json_encode(array("success" => true, "url" => $tvwUrl)));
+        } else {
+            die(json_encode(array("success" => false, "error" => "Something went wrong.")));
+        }
     }
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Test</title>
+    <title>tvw.me | upload, shorten, share</title>
 
     <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-    <link rel="manifest" href="../manifest.webmanifest?v=2">
+    <link rel="manifest" href="../manifest.webmanifest">
     <meta name="msapplication-TileColor" content="#003e07">
     <meta name="theme-color" content="#003e07">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -61,9 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <button onclick="storeApiKey('API_KEY', document.getElementById('apiKeyInput').value)"> click me!</button>
 <div id="apiKeyUsed"></div>
 <p>
-<form action="./" method="post">
-    <label for="w3mission">Type text:</label>
-    <textarea id="w3mission" name="input" rows="4" cols="50"></textarea>
+<form action="./?pwa=true" method="post">
+    <label for="inputTextArea">Type text:</label>
+    <textarea id="inputTextArea" name="input" rows="4" cols="50"></textarea>
     <button type="submit">Submit!</button>
 </form>
 </p>

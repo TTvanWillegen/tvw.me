@@ -4,6 +4,7 @@ require_once("settings.php");
 class Uploader
 {
     private const BASE_FOLDER = "../";
+
     public static function validateAccess($apiKey)
     {
         return !empty($apiKey) && in_array($apiKey, Settings::API_KEYS);
@@ -30,8 +31,6 @@ class Uploader
             return false;
         }
 
-        $php = "";
-        $prefix = "";
         $randomName = Uploader::getRandomName();
         $fileName = $file['name'];
 
@@ -39,14 +38,17 @@ class Uploader
             $prefix = "i";
             $php = '
                 <html>
+                    <head>
+                        <title>tvw.me | upload, shorten, share</title>
+                        <meta name="viewport" content="width=device-width, initial-scale=1">
+                    </head>
                     <body style="background: #2b2b2b;">
                         <img src="%1$s" alt="%2$s"/>
                     </body>
                 </html>';
         } else {
             $prefix = "f";
-            $php = '
-                header("Content-Type: application/octet-stream"); 
+            $php = 'header("Content-Type: application/octet-stream"); 
                 header("Content-Transfer-Encoding: Binary"); 
                 header("Content-disposition: attachment; filename="%2$s"); 
                 readfile(%1$s); 
@@ -54,9 +56,9 @@ class Uploader
         }
 
         $randomName = $prefix . $randomName;
-        mkdir(self::BASE_FOLDER. $randomName);
-        move_uploaded_file($file['tmp_name'], self::BASE_FOLDER.$randomName . "/" . $randomName);
-        $file = fopen(self::BASE_FOLDER.$randomName . "/index.php", "w");
+        mkdir(self::BASE_FOLDER . $randomName);
+        move_uploaded_file($tempFileName, self::BASE_FOLDER . $randomName . "/" . $randomName);
+        $file = fopen(self::BASE_FOLDER . $randomName . "/index.php", "w");
         fwrite($file, sprintf($php, $randomName, $fileName));
         fclose($file);
         return "https://tvw.me/" . $randomName;
@@ -79,9 +81,11 @@ class Uploader
             $php = '
                 <html>
                     <head>
-                    <link rel="stylesheet"
-                        href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/darcula.min.css">
-                    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/highlight.min.js"></script>
+                        <title>tvw.me | upload, shorten, share</title>
+                        <meta name="viewport" content="width=device-width, initial-scale=1">
+                        <link rel="stylesheet"
+                            href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/darcula.min.css">
+                        <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/highlight.min.js"></script>
                     </head>
                     <body style="background: #2b2b2b;">
                         <pre><code>%1$s</code></pre>
@@ -91,8 +95,8 @@ class Uploader
             $text = htmlentities($text);
         }
         $randomName = $prefix . $randomName;
-        mkdir(self::BASE_FOLDER.$randomName);
-        $file = fopen(self::BASE_FOLDER.$randomName . "/index.php", "w");
+        mkdir(self::BASE_FOLDER . $randomName);
+        $file = fopen(self::BASE_FOLDER . $randomName . "/index.php", "w");
         fwrite($file, sprintf($php, $text));
         fclose($file);
         return "https://tvw.me/" . $randomName;

@@ -20,9 +20,6 @@ self.addEventListener('fetch', event => {
             let request = new Request(event.request, {
                 headers: h
             })
-
-            console.log(request);
-            request.headers.forEach((xk,xv) => console.log(xk + ": " + xv));
             return fetch(request);
         }));
 });
@@ -67,21 +64,5 @@ function getIdb() {
         });
     }
     return idbPromise;
-}
-
-function openShare(url, password = null) {
-    let text = url;
-    if (password) {
-        text = text + ", password: " + password;
-    }
-
-    if (navigator.share) {
-        navigator.share({
-            title: 'Uploaded to tvw.me',
-            text: text,
-        })
-            .then(() => console.log('Successful share'))
-            .catch((error) => console.log('Error sharing', error));
-    }
 }
 
