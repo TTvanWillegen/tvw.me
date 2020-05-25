@@ -25,7 +25,7 @@ class Uploader
         return filter_var($text, FILTER_VALIDATE_URL);
     }
 
-    public static function uploadFile($file, $tempFileName)
+    public static function uploadFile($file)
     {
         if (empty($file)) {
             return false;
@@ -33,6 +33,7 @@ class Uploader
 
         $randomName = Uploader::getRandomName();
         $fileName = $file['name'];
+        $tempFileName = $file['tmp_name'];
 
         if (Uploader::isImageFile($tempFileName)) {
             $prefix = "i";
@@ -48,17 +49,19 @@ class Uploader
                 </html>';
         } else {
             $prefix = "f";
-            $php = 'header("Content-Type: application/octet-stream"); 
-                header("Content-Transfer-Encoding: Binary"); 
-                header("Content-disposition: attachment; filename="%2$s"); 
-                readfile(%1$s); 
+            $php = '
+                <?php
+                header(\'Content-Type: application/octet-stream\'); 
+                header(\'Content-Transfer-Encoding: Binary\'); 
+                header(\'Content-disposition: attachment; filename="%2$s"\'); 
+                readfile(\'%1$s\'); 
             ';
         }
 
         $randomName = $prefix . $randomName;
         mkdir(self::BASE_FOLDER . $randomName);
-        move_uploaded_file($tempFileName, self::BASE_FOLDER . $randomName . "/" . $randomName);
-        $file = fopen(self::BASE_FOLDER . $randomName . "/index.php", "w");
+        move_uploaded_file($tempFileName, self::BASE_FOLDER . $randomName . DIRECTORY_SEPARATOR . $randomName);
+        $file = fopen(self::BASE_FOLDER . $randomName . DIRECTORY_SEPARATOR . "index.php", "w");
         fwrite($file, sprintf($php, $randomName, $fileName));
         fclose($file);
         return "https://tvw.me/" . $randomName;

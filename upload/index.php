@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     if (!empty($_FILES['file'])) {
-        $tvwUrl = Uploader::uploadFile($_FILES['file'], $_FILES['file']['tmp_name']);
+        $tvwUrl = Uploader::uploadFile($_FILES['file']);
     }
     if (!empty($_POST['input'])) {
         $tvwUrl = Uploader::uploadText($_POST['input']);
