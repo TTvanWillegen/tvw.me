@@ -55,6 +55,7 @@ Under Method, select `POST`.
 Under Request URL, type `{YOUR DOMAIN}/upload/index.php`.
 Under Body, select `Form data (multipart/form-data)`.
 Under Headers>Name type `API_KEY`, under Headers>Value type the API key you set up.
+Under File form name type `file`.
 Under URL, type `{json:url}`
 
 ## Finalizing
